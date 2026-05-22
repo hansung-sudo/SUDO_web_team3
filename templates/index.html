@@ -9,6 +9,9 @@
     /* Dropdown + hamburger styles with animation */
     .dropdown { position: relative; display: inline-block; }
     .menu-toggle { background:transparent; border:none; padding:8px; cursor:pointer; display:flex; align-items:center; }
+    .brand-area { display:flex; align-items:center; gap:0.75rem; }
+    .theme-toggle { width:42px; height:42px; border-radius:50%; border:1px solid rgba(0,0,0,0.12); background:rgba(255,255,255,0.9); color:#111; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: background 220ms ease, border-color 220ms ease, color 220ms ease; }
+    .theme-toggle:hover { background:rgba(0,0,0,0.04); }
     .hamburger { width:22px; height:16px; display:inline-block; position:relative; }
     .hamburger span { position:absolute; left:0; right:0; height:2px; background:#111; display:block; transition:transform 200ms ease, opacity 200ms ease; }
     .hamburger span:nth-child(1) { top:0; }
@@ -25,15 +28,35 @@
     .dropdown-menu li { padding:0; }
     .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
     .dropdown-menu li a:hover { background:#f3f4f6; }
+
+    .dark-theme body { background:#0b1120; color:#e3e8ff; }
+    .dark-theme .header { background:#090d19; box-shadow:0 2px 12px rgba(0,0,0,0.35); }
+    .dark-theme .logo-area { color:#f8fafc; }
+    .dark-theme .menu-toggle .hamburger span { background:#f8fafc; }
+    .dark-theme .theme-toggle { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18); color:#f8fafc; }
+    .dark-theme .dropdown-menu { background:#111827; border-color:#334155; box-shadow:0 12px 26px rgba(0,0,0,0.35); }
+    .dark-theme .dropdown-menu li a { color:#e2e8f0; }
+    .dark-theme .dropdown-menu li a:hover { background:#1f2937; }
+    .dark-theme .hero-bg-line { background: linear-gradient(90deg, transparent, #334155, transparent); opacity:0.4; }
+    .dark-theme .badge { background-color:#1e293b; color:#93c5fd; }
+    .dark-theme .anime-text { color:#cbd5e1; }
+    .dark-theme .btn.primary { background-color:#2563eb; }
+    .dark-theme .btn.primary:hover { background-color:#1d4ed8; }
+    .dark-theme .btn.secondary { background-color:#1f2937; color:#e2e8f0; border-color:#334155; }
+    .dark-theme .footer { background-color:#0f172a; color:#cbd5e1; }
+    .dark-theme .hero-image .hologram { border-color:#3b82f6; opacity:0.16; }
   </style>
 </head>
 <body>
   <header class="header">
     <nav class="navbar">
-      <a href="#home" class="logo-area">
-        <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
-        <span>SUDO</span>
-      </a>
+      <div class="brand-area">
+        <a href="#home" class="logo-area">
+          <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
+          <span>SUDO</span>
+        </a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
 
       <div class="dropdown" id="mainMenu">
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
@@ -87,6 +110,31 @@
     (function(){
       const toggle = document.getElementById('menuToggle');
       const menu = document.getElementById('dropdownMenu');
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+
+      const setTheme = (dark) => {
+        if (dark) {
+          root.classList.add('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to light mode');
+          if (themeToggle) themeToggle.textContent = '☀️';
+        } else {
+          root.classList.remove('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to dark mode');
+          if (themeToggle) themeToggle.textContent = '🌙';
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      themeToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setTheme(!root.classList.contains('dark-theme'));
+      });
+
       if (!toggle || !menu) return;
       toggle.addEventListener('click', (e)=>{
         e.stopPropagation();
