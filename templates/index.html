@@ -1,10 +1,116 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>SUDO Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUDO Study</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    /* Dropdown + hamburger styles with animation */
+    .dropdown { position: relative; display: inline-block; }
+    .menu-toggle { background:transparent; border:none; padding:8px; cursor:pointer; display:flex; align-items:center; }
+    .hamburger { width:22px; height:16px; display:inline-block; position:relative; }
+    .hamburger span { position:absolute; left:0; right:0; height:2px; background:#111; display:block; transition:transform 200ms ease, opacity 200ms ease; }
+    .hamburger span:nth-child(1) { top:0; }
+    .hamburger span:nth-child(2) { top:7px; }
+    .hamburger span:nth-child(3) { top:14px; }
+
+    .menu-toggle.open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open .hamburger span:nth-child(2) { opacity:0; }
+    .menu-toggle.open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); background:#fff; border:1px solid #ddd; box-shadow:0 6px 18px rgba(0,0,0,0.08); list-style:none; padding:8px 0; margin:0; min-width:160px; z-index:200; opacity:0; transform: translateY(-8px) scaleY(0.98); transform-origin: top right; pointer-events:none; transition: opacity 220ms ease, transform 220ms ease; border-radius:6px; }
+    .dropdown-menu.open { opacity:1; transform: translateY(0) scaleY(1); pointer-events:auto; }
+
+    .dropdown-menu li { padding:0; }
+    .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
+    .dropdown-menu li a:hover { background:#f3f4f6; }
+  </style>
 </head>
 <body>
-    <h1>SUDO WEBSITE</h1>
+  <header class="header">
+    <nav class="navbar">
+      <a href="#home" class="logo-area">
+        <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
+        <span>SUDO</span>
+      </a>
+
+      <div class="dropdown" id="mainMenu">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+          <span class="hamburger"><span></span><span></span><span></span></span>
+        </button>
+        <ul class="dropdown-menu" id="dropdownMenu">
+          <li><a href="templates/intro.html">소개</a></li>
+          <li><a href="templates/board.html">게시판</a></li>
+          <li><a href="templates/apply.html">지원</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-bg-line"></div>
+
+      <div class="hero-text">
+        <p class="badge">Programming Study Team</p>
+
+        <h1>
+          함께 성장하는<br />
+          개발 스터디 <span>SUDO</span>
+        </h1>
+
+        <p class="anime-text">
+          SUDO는 한성대 학생들이 참여하는 스터디 그룹으로<br />
+          프로젝트를 실전 협업 방식으로 진행하며 개발 역량을 키우는 스터디입니다.
+        </p>
+
+        
+      </div>
+
+      <div class="hero-image">
+        <div class="hologram"></div>
+        <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" id="sudoLogo" />
+      </div>
+    </section>
+
+    
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 SUDO Study. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="/static/script.js"></script>
+  <script>
+    // Dropdown toggle with animation
+    (function(){
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('dropdownMenu');
+      if (!toggle || !menu) return;
+      toggle.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('open');
+        if (isOpen) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        } else {
+          menu.classList.add('open');
+          toggle.classList.add('open');
+          toggle.setAttribute('aria-expanded','true');
+        }
+      });
+      // close when clicking outside
+      document.addEventListener('click', (e)=>{
+        if (!menu.classList.contains('open')) return;
+        if (!e.target.closest('#mainMenu')){
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
