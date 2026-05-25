@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for
 import json
-=======
 from flask import Flask, render_template
->>>>>>> 2cf8c14 (first push)
 import os
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -149,4 +146,9 @@ def post_detail(post_id):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(debug=True)
+=======
+    app.run(debug=True)
+##alsrms002 first commit
+>>>>>>> dc827d2 (first commit)
