@@ -6,7 +6,7 @@
   <title>SUDO Study</title>
   <link rel="stylesheet" href="/static/style.css" />
   <style>
-    /* Dropdown + hamburger styles with animation */
+    /* 드롭다운 + 햄버거 애니메이션 스타일 */
     .dropdown { position: relative; display: inline-block; }
     .menu-toggle { background:transparent; border:none; padding:8px; cursor:pointer; display:flex; align-items:center; }
     .brand-area { display:flex; align-items:center; gap:0.75rem; }
@@ -29,6 +29,7 @@
     .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
     .dropdown-menu li a:hover { background:#f3f4f6; }
 
+    /* 다크 모드 테마 적용 오버라이드 */
     .dark-theme body { background:#0b1120; color:#e3e8ff; }
     .dark-theme .header { background:#090d19; box-shadow:0 2px 12px rgba(0,0,0,0.35); }
     .dark-theme .logo-area { color:#f8fafc; }
@@ -50,22 +51,24 @@
 <body>
   <header class="header">
     <nav class="navbar">
+      <!-- 브랜드와 테마 토글: 로고 옆 다크 모드 버튼 -->
       <div class="brand-area">
-        <a href="#home" class="logo-area">
+        <a href="/" class="logo-area">
           <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
           <span>SUDO</span>
         </a>
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
       </div>
 
+      <!-- 햄버거 메뉴와 드롭다운 내비게이션 -->
       <div class="dropdown" id="mainMenu">
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
           <span class="hamburger"><span></span><span></span><span></span></span>
         </button>
         <ul class="dropdown-menu" id="dropdownMenu">
-          <li><a href="templates/intro.html">소개</a></li>
-          <li><a href="templates/board.html">게시판</a></li>
-          <li><a href="templates/apply.html">지원</a></li>
+          <li><a href="/intro">소개</a></li>
+          <li><a href="/board">게시판</a></li>
+          <li><a href="/apply">지원</a></li>
         </ul>
       </div>
     </nav>
@@ -88,7 +91,7 @@
           프로젝트를 실전 협업 방식으로 진행하며 개발 역량을 키우는 스터디입니다.
         </p>
 
-        
+        <!-- 히어로 섹션: 현재 메인 타이틀과 설명만 표시 -->
       </div>
 
       <div class="hero-image">
@@ -106,13 +109,14 @@
 
   <script type="module" src="/static/script.js"></script>
   <script>
-    // Dropdown toggle with animation
+    // 드롭다운 토글 애니메이션 처리
     (function(){
       const toggle = document.getElementById('menuToggle');
       const menu = document.getElementById('dropdownMenu');
       const themeToggle = document.getElementById('themeToggle');
       const root = document.documentElement;
 
+      // 다크 또는 라이트 테마를 적용하고 선택을 저장
       const setTheme = (dark) => {
         if (dark) {
           root.classList.add('dark-theme');
@@ -126,16 +130,19 @@
         localStorage.setItem('theme', dark ? 'dark' : 'light');
       };
 
+      // 저장된 테마를 불러오거나 시스템 설정을 기본으로 사용
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
 
+      // 테마 버튼 클릭 시 다크 모드 토글
       themeToggle?.addEventListener('click', (e) => {
         e.stopPropagation();
         setTheme(!root.classList.contains('dark-theme'));
       });
 
       if (!toggle || !menu) return;
+      // 드롭다운 메뉴 열기/닫기 토글
       toggle.addEventListener('click', (e)=>{
         e.stopPropagation();
         const isOpen = menu.classList.contains('open');
@@ -149,7 +156,7 @@
           toggle.setAttribute('aria-expanded','true');
         }
       });
-      // close when clicking outside
+      // 외부 클릭 시 드롭다운 닫기
       document.addEventListener('click', (e)=>{
         if (!menu.classList.contains('open')) return;
         if (!e.target.closest('#mainMenu')){
