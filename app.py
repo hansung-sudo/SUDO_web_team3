@@ -145,6 +145,18 @@ def post_detail(post_id):
     return render_template("post_detail.html", post=post, comments=comments)
 
 
+@app.route("/intro")
+def intro():
+    return render_template("intro.html")
+
+@app.route("/board")
+def board():
+    return render_template("board.html")
+
+@app.route("/apply")
+def apply():
+    return render_template("apply.html")
+
 if __name__ == "__main__":
 <<<<<<< HEAD
     app.run(debug=True)
