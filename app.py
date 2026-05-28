@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for
 import json
+=======
+from flask import Flask, render_template
+>>>>>>> 2cf8c14 (first push)
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 POSTS_FILE = "posts.txt"
 COMMENTS_FILE = "comments.txt"
