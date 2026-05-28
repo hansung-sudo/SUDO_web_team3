@@ -1,10 +1,199 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>SUDO Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUDO Study</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    /* 드롭다운 + 햄버거 애니메이션 스타일 */
+    .dropdown { position: relative; display: inline-block; }
+    .menu-toggle { background:transparent; border:none; padding:8px; cursor:pointer; display:flex; align-items:center; }
+    .brand-area { display:flex; align-items:center; gap:0.75rem; }
+    .theme-toggle { width:42px; height:42px; border-radius:50%; border:1px solid rgba(0,0,0,0.12); background:rgba(255,255,255,0.9); color:#111; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: background 220ms ease, border-color 220ms ease, color 220ms ease; }
+    .theme-toggle:hover { background:rgba(0,0,0,0.04); }
+    .hamburger { width:22px; height:16px; display:inline-block; position:relative; }
+    .hamburger span { position:absolute; left:0; right:0; height:2px; background:#111; display:block; transition:transform 200ms ease, opacity 200ms ease; }
+    .hamburger span:nth-child(1) { top:0; }
+    .hamburger span:nth-child(2) { top:7px; }
+    .hamburger span:nth-child(3) { top:14px; }
+
+    .menu-toggle.open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open .hamburger span:nth-child(2) { opacity:0; }
+    .menu-toggle.open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); background:#fff; border:1px solid #ddd; box-shadow:0 6px 18px rgba(0,0,0,0.08); list-style:none; padding:8px 0; margin:0; min-width:160px; z-index:200; opacity:0; transform: translateY(-8px) scaleY(0.98); transform-origin: top right; pointer-events:none; transition: opacity 220ms ease, transform 220ms ease; border-radius:6px; }
+    .dropdown-menu.open { opacity:1; transform: translateY(0) scaleY(1); pointer-events:auto; }
+
+    .dropdown-menu li { padding:0; }
+    .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
+    .dropdown-menu li a:hover { background:#f3f4f6; }
+
+    /* 다크 모드 테마 적용 오버라이드 */
+    .dark-theme body { background:#0b1120; color:#e3e8ff; }
+    .dark-theme .header { background:#090d19; box-shadow:0 2px 12px rgba(0,0,0,0.35); }
+    .dark-theme .logo-area { color:#f8fafc; }
+    .dark-theme .menu-toggle .hamburger span { background:#f8fafc; }
+    .dark-theme .theme-toggle { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18); color:#f8fafc; }
+    .dark-theme .dropdown-menu { background:#111827; border-color:#334155; box-shadow:0 12px 26px rgba(0,0,0,0.35); }
+    .dark-theme .dropdown-menu li a { color:#e2e8f0; }
+    .dark-theme .dropdown-menu li a:hover { background:#1f2937; }
+    .dark-theme .hero-bg-line { background: linear-gradient(90deg, transparent, #334155, transparent); opacity:0.4; }
+    .dark-theme .badge { background-color:#1e293b; color:#93c5fd; }
+    .dark-theme .anime-text { color:#cbd5e1; }
+    .dark-theme .btn.primary { background-color:#2563eb; }
+    .dark-theme .btn.primary:hover { background-color:#1d4ed8; }
+    .dark-theme .btn.secondary { background-color:#1f2937; color:#e2e8f0; border-color:#334155; }
+    .dark-theme .footer { background-color:#0f172a; color:#cbd5e1; }
+    .dark-theme .hero-image .hologram { border-color:#3b82f6; opacity:0.16; }
+    .logo-mount-root { z-index:2; animation: logoFloat 3s ease-in-out infinite; perspective:800px; }
+    .logo-mount-root img { transition: filter 220ms ease; transform-style:preserve-3d; }
+    .logo-mount-root:hover img { animation: logoFlip 650ms ease both; filter: drop-shadow(0 18px 28px rgba(0, 123, 255, 0.28)); }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(16px); }
+      50% { transform: translateY(10px); }
+    }
+    @keyframes logoFlip {
+      0% { transform: scale(1) rotateY(0deg); }
+      45% { transform: scale(1.06) rotateY(180deg); }
+      100% { transform: scale(1.06) rotateY(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <h1>SUDO WEBSITE</h1>
+  <header class="header">
+    <nav class="navbar">
+      <!-- 브랜드와 테마 토글: 로고 옆 다크 모드 버튼 -->
+      <div class="brand-area">
+        <a href="/" class="logo-area">
+          <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
+          <span>SUDO</span>
+        </a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
+
+      <!-- 햄버거 메뉴와 드롭다운 내비게이션 -->
+      <div class="dropdown" id="mainMenu">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+          <span class="hamburger"><span></span><span></span><span></span></span>
+        </button>
+        <ul class="dropdown-menu" id="dropdownMenu">
+          <li><a href="/intro">소개</a></li>
+          <li><a href="/board">게시판</a></li>
+          <li><a href="/apply">지원</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-bg-line"></div>
+
+      <div class="hero-text">
+        <p class="badge">Programming Study Team</p>
+
+        <h1>
+          함께 성장하는<br />
+          개발 스터디 <span>SUDO</span>
+        </h1>
+
+        <p class="anime-text">
+          SUDO는 한성대 학생들이 참여하는 스터디 그룹으로<br />
+          프로젝트를 실전 협업 방식으로 진행하며 개발 역량을 키우는 스터디입니다.
+        </p>
+
+        <!-- 히어로 섹션: 현재 메인 타이틀과 설명만 표시 -->
+      </div>
+
+      <div class="hero-image">
+        <div class="hologram"></div>
+        <div id="sudoLogoRoot" class="logo-mount-root"></div>
+      </div>
+    </section>
+
+    
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 SUDO Study. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/mithril/mithril.js"></script>
+  <script type="module" src="/static/script.js"></script>
+  <script>
+    // SUDO 로고 이미지를 Mithril 컴포넌트 방식으로 렌더링
+    const root = document.getElementById('sudoLogoRoot');
+
+    // Your code here
+    m.mount(root, {
+      view: function() {
+        return m("img", {
+          src: "/static/assets/sudo-logo.png",
+          alt: "SUDO Logo",
+          id: "sudoLogo"
+        })
+      }
+    })
+  </script>
+  <script>
+    // 드롭다운 토글 애니메이션 처리
+    (function(){
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('dropdownMenu');
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+
+      // 다크 또는 라이트 테마를 적용하고 선택을 저장
+      const setTheme = (dark) => {
+        if (dark) {
+          root.classList.add('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to light mode');
+          if (themeToggle) themeToggle.textContent = '☀️';
+        } else {
+          root.classList.remove('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to dark mode');
+          if (themeToggle) themeToggle.textContent = '🌙';
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+
+      // 저장된 테마를 불러오거나 시스템 설정을 기본으로 사용
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      // 테마 버튼 클릭 시 다크 모드 토글
+      themeToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setTheme(!root.classList.contains('dark-theme'));
+      });
+
+      if (!toggle || !menu) return;
+      // 드롭다운 메뉴 열기/닫기 토글
+      toggle.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('open');
+        if (isOpen) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        } else {
+          menu.classList.add('open');
+          toggle.classList.add('open');
+          toggle.setAttribute('aria-expanded','true');
+        }
+      });
+      // 외부 클릭 시 드롭다운 닫기
+      document.addEventListener('click', (e)=>{
+        if (!menu.classList.contains('open')) return;
+        if (!e.target.closest('#mainMenu')){
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
