@@ -46,6 +46,18 @@
     .dark-theme .btn.secondary { background-color:#1f2937; color:#e2e8f0; border-color:#334155; }
     .dark-theme .footer { background-color:#0f172a; color:#cbd5e1; }
     .dark-theme .hero-image .hologram { border-color:#3b82f6; opacity:0.16; }
+    .logo-mount-root { z-index:2; animation: logoFloat 3s ease-in-out infinite; perspective:800px; }
+    .logo-mount-root img { transition: filter 220ms ease; transform-style:preserve-3d; }
+    .logo-mount-root:hover img { animation: logoFlip 650ms ease both; filter: drop-shadow(0 18px 28px rgba(0, 123, 255, 0.28)); }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(16px); }
+      50% { transform: translateY(10px); }
+    }
+    @keyframes logoFlip {
+      0% { transform: scale(1) rotateY(0deg); }
+      45% { transform: scale(1.06) rotateY(180deg); }
+      100% { transform: scale(1.06) rotateY(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -96,7 +108,7 @@
 
       <div class="hero-image">
         <div class="hologram"></div>
-        <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" id="sudoLogo" />
+        <div id="sudoLogoRoot" class="logo-mount-root"></div>
       </div>
     </section>
 
@@ -107,7 +119,23 @@
     <p>© 2026 SUDO Study. All rights reserved.</p>
   </footer>
 
+  <script src="https://unpkg.com/mithril/mithril.js"></script>
   <script type="module" src="/static/script.js"></script>
+  <script>
+    // SUDO 로고 이미지를 Mithril 컴포넌트 방식으로 렌더링
+    const root = document.getElementById('sudoLogoRoot');
+
+    // Your code here
+    m.mount(root, {
+      view: function() {
+        return m("img", {
+          src: "/static/assets/sudo-logo.png",
+          alt: "SUDO Logo",
+          id: "sudoLogo"
+        })
+      }
+    })
+  </script>
   <script>
     // 드롭다운 토글 애니메이션 처리
     (function(){
