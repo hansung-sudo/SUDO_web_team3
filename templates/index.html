@@ -28,6 +28,8 @@
     .dropdown-menu li { padding:0; }
     .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
     .dropdown-menu li a:hover { background:#f3f4f6; }
+    .logo-area { gap:0.25rem; }
+    .logo-area .nav-logo { transform:translateY(3px); }
 
     /* 다크 모드 테마 적용 오버라이드 */
     .dark-theme body { background:#0b1120; color:#e3e8ff; }
@@ -46,6 +48,46 @@
     .dark-theme .btn.secondary { background-color:#1f2937; color:#e2e8f0; border-color:#334155; }
     .dark-theme .footer { background-color:#0f172a; color:#cbd5e1; }
     .dark-theme .hero-image .hologram { border-color:#3b82f6; opacity:0.16; }
+    .hero { overflow:hidden; }
+    .hero::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(90deg, rgba(0,123,255,0.08) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(0,123,255,0.06) 0 1px, transparent 1px 44px);
+      mask-image:linear-gradient(90deg, rgba(0,0,0,0.42), rgba(0,0,0,0.15) 42%, rgba(0,0,0,0.55));
+      pointer-events:none;
+      z-index:0;
+    }
+    .ai-bg { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+    .ai-trace { position:absolute; height:2px; background:linear-gradient(90deg, transparent, rgba(0,123,255,0.42), transparent); opacity:0.65; animation: tracePulse 4s ease-in-out infinite; }
+    .ai-trace::before,
+    .ai-trace::after { content:""; position:absolute; top:50%; width:8px; height:8px; border:1px solid rgba(0,123,255,0.46); background:rgba(249,249,249,0.88); transform:translateY(-50%) rotate(45deg); }
+    .ai-trace::before { left:18%; }
+    .ai-trace::after { right:12%; }
+    .ai-trace:nth-child(1) { top:24%; left:8%; width:34%; }
+    .ai-trace:nth-child(2) { top:38%; right:2%; width:42%; animation-delay:1.1s; }
+    .ai-trace:nth-child(3) { bottom:24%; left:34%; width:48%; animation-delay:2s; }
+    .ai-chip { position:absolute; width:56px; height:38px; border:1px solid rgba(0,123,255,0.24); border-radius:6px; background:rgba(255,255,255,0.32); }
+    .ai-chip::before { content:""; position:absolute; inset:8px; border:1px solid rgba(0,123,255,0.28); border-radius:3px; }
+    .ai-chip.one { display:none; }
+    .ai-chip.two { right:7%; top:16%; transform:scale(0.82); }
+    .hero-text,
+    .hero-image { position:relative; z-index:2; }
+    .dark-theme .hero::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(96,165,250,0.12) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(96,165,250,0.1) 0 1px, transparent 1px 44px);
+    }
+    .dark-theme .ai-trace { background:linear-gradient(90deg, transparent, rgba(96,165,250,0.55), transparent); }
+    .dark-theme .ai-trace::before,
+    .dark-theme .ai-trace::after { border-color:rgba(147,197,253,0.55); background:rgba(15,23,42,0.88); }
+    .dark-theme .ai-chip { border-color:rgba(147,197,253,0.26); background:rgba(15,23,42,0.28); }
+    .dark-theme .ai-chip::before { border-color:rgba(147,197,253,0.34); }
+    .hero-text .badge { transform:translateY(-10px); }
+    .hero .hero-bg-line { left:42%; width:58%; background:linear-gradient(90deg, transparent, #ddd 18%, #ddd 72%, transparent); }
+    .dark-theme .hero .hero-bg-line { background:linear-gradient(90deg, transparent, #334155 18%, #334155 72%, transparent); }
     .logo-mount-root { z-index:2; animation: logoFloat 3s ease-in-out infinite; perspective:800px; }
     .logo-mount-root img { transition: filter 220ms ease; transform-style:preserve-3d; }
     .logo-mount-root:hover img { animation: logoFlip 650ms ease both; filter: drop-shadow(0 18px 28px rgba(0, 123, 255, 0.28)); }
@@ -57,6 +99,18 @@
       0% { transform: scale(1) rotateY(0deg); }
       45% { transform: scale(1.06) rotateY(180deg); }
       100% { transform: scale(1.06) rotateY(360deg); }
+    }
+    @keyframes tracePulse {
+      0%, 100% { opacity:0.26; transform:translateX(0); }
+      50% { opacity:0.72; transform:translateX(12px); }
+    }
+    @media (max-width:768px) {
+      .hero .hero-bg-line { left:0; width:100%; background:linear-gradient(90deg, transparent, #ddd, transparent); }
+      .dark-theme .hero .hero-bg-line { background:linear-gradient(90deg, transparent, #334155, transparent); }
+      .ai-trace:nth-child(1) { left:-12%; width:70%; }
+      .ai-trace:nth-child(2) { right:-18%; width:76%; }
+      .ai-trace:nth-child(3),
+      .ai-chip { display:none; }
     }
   </style>
 </head>
@@ -88,6 +142,13 @@
 
   <main>
     <section id="home" class="hero">
+      <div class="ai-bg" aria-hidden="true">
+        <span class="ai-trace"></span>
+        <span class="ai-trace"></span>
+        <span class="ai-trace"></span>
+        <span class="ai-chip one"></span>
+        <span class="ai-chip two"></span>
+      </div>
       <div class="hero-bg-line"></div>
 
       <div class="hero-text">
