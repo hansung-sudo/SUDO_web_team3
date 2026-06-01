@@ -1,3 +1,23 @@
+:root {
+  --primary: #0ea5e9;
+  --primary-dark: #0284c7;
+  --mint: #2dd4bf;
+  --green: #22c55e;
+  --green-dark: #16a34a;
+
+  --bg: #f8fcff;
+  --soft-bg: #e0f7fa;
+  --soft-blue: #e0f2fe;
+  --white: #ffffff;
+
+  --text: #1f2937;
+  --muted: #64748b;
+  --border: #d6eef5;
+
+  --footer: #0f172a;
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,14 +27,14 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f9f9f9;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 /* Header & Navigation */
 .header {
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--white);
+  box-shadow: 0 2px 12px var(--shadow);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -34,7 +54,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  color: #333;
+  color: var(--text);
   font-weight: bold;
   font-size: 1.5rem;
 }
@@ -53,26 +73,26 @@ body {
 
 .nav-menu a {
   text-decoration: none;
-  color: #333;
+  color: var(--text);
   transition: color 0.3s ease;
 }
 
 .nav-menu a:hover,
 .nav-menu a.active {
-  color: #007bff;
+  color: var(--primary);
 }
 
 .join-btn {
   padding: 0.5rem 1.5rem;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--green);
+  color: var(--white);
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 
 .join-btn:hover {
-  background-color: #0056b3;
+  background-color: var(--green-dark);
 }
 
 .menu-btn {
@@ -81,6 +101,7 @@ body {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: var(--text);
 }
 
 /* Main Content */
@@ -107,8 +128,8 @@ main {
   top: 50%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #ddd, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, var(--mint), transparent);
+  opacity: 0.4;
 }
 
 .hero-text {
@@ -119,8 +140,8 @@ main {
 .badge {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: #e7f3ff;
-  color: #007bff;
+  background-color: var(--soft-blue);
+  color: var(--primary-dark);
   border-radius: 20px;
   font-size: 0.9rem;
   margin-bottom: 1rem;
@@ -133,12 +154,12 @@ main {
 }
 
 .hero h1 span {
-  color: #007bff;
+  color: var(--primary);
 }
 
 .anime-text {
   font-size: 1.1rem;
-  color: #666;
+  color: var(--muted);
   margin-bottom: 2rem;
 }
 
@@ -161,22 +182,22 @@ main {
 }
 
 .btn.primary {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
 }
 
 .btn.primary:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-dark);
 }
 
 .btn.secondary {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 2px solid #ddd;
+  background-color: var(--white);
+  color: var(--primary-dark);
+  border: 2px solid var(--border);
 }
 
 .btn.secondary:hover {
-  background-color: #e0e0e0;
+  background-color: var(--soft-blue);
 }
 
 .hero-image {
@@ -191,9 +212,9 @@ main {
   position: absolute;
   width: 300px;
   height: 300px;
-  border: 2px solid #007bff;
+  border: 2px solid var(--mint);
   border-radius: 50%;
-  opacity: 0.2;
+  opacity: 0.25;
 }
 
 #sudoLogo {
@@ -208,8 +229,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  padding: 4rem 0;
-  background-color: #f0f8ff;
+  background-color: var(--soft-bg);
   padding: 3rem;
   border-radius: 10px;
   margin: 3rem 0;
@@ -218,9 +238,9 @@ main {
 .feature-card {
   text-align: center;
   padding: 2rem;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--shadow);
 }
 
 .icon {
@@ -230,11 +250,11 @@ main {
 
 .feature-card h3 {
   margin-bottom: 0.5rem;
-  color: #007bff;
+  color: var(--primary);
 }
 
 .feature-card p {
-  color: #666;
+  color: var(--muted);
 }
 
 /* Sections */
@@ -253,11 +273,11 @@ main {
 }
 
 .section-title h2 span {
-  color: #007bff;
+  color: var(--primary);
 }
 
 .section-title p {
-  color: #666;
+  color: var(--muted);
   font-size: 1.1rem;
 }
 
@@ -270,15 +290,15 @@ main {
 
 .topic-card {
   padding: 2rem;
-  border-left: 4px solid #007bff;
-  background-color: white;
+  border-left: 4px solid var(--mint);
+  background-color: var(--white);
   border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--shadow);
 }
 
 .topic-card span {
   font-size: 2rem;
-  color: #007bff;
+  color: var(--primary);
   font-weight: bold;
 }
 
@@ -287,7 +307,7 @@ main {
 }
 
 .topic-card p {
-  color: #666;
+  color: var(--muted);
 }
 
 /* Member Grid */
@@ -300,16 +320,16 @@ main {
 .member-card {
   text-align: center;
   padding: 2rem;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--shadow);
 }
 
 .profile {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--mint));
+  color: var(--white);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -324,13 +344,13 @@ main {
 }
 
 .member-card p {
-  color: #666;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
 /* Contact Section */
 .contact-section {
-  background-color: #f0f8ff;
+  background-color: var(--soft-bg);
   padding: 3rem;
   border-radius: 10px;
 }
@@ -346,10 +366,17 @@ main {
 .contact-form input,
 .contact-form textarea {
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 5px;
   font-family: inherit;
   font-size: 1rem;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
 }
 
 .contact-form textarea {
@@ -363,8 +390,8 @@ main {
 
 /* Footer */
 .footer {
-  background-color: #333;
-  color: white;
+  background-color: var(--footer);
+  color: var(--white);
   text-align: center;
   padding: 2rem;
   margin-top: 4rem;
@@ -387,8 +414,9 @@ main {
     top: 60px;
     left: 0;
     right: 0;
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--white);
+    box-shadow: 0 4px 10px var(--shadow);
+    padding: 1rem;
   }
 
   .menu-btn {
