@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
-from flask import Flask, render_template
 import os
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
 POSTS_FILE = "posts.txt"
 COMMENTS_FILE = "comments.txt"
@@ -108,6 +107,11 @@ def home():
     return redirect(url_for("board"))
 
 
+@app.route("/intro")
+def intro():
+    return render_template("intro.html")
+
+
 @app.route("/board", methods=["GET", "POST"])
 def board():
     if request.method == "POST":
@@ -145,22 +149,10 @@ def post_detail(post_id):
     return render_template("post_detail.html", post=post, comments=comments)
 
 
-@app.route("/intro")
-def intro():
-    return render_template("intro.html")
-
-@app.route("/board")
-def board():
-    return render_template("board.html")
-
 @app.route("/apply")
 def apply():
     return render_template("apply.html")
 
+
 if __name__ == "__main__":
-<<<<<<< HEAD
     app.run(debug=True)
-=======
-    app.run(debug=True)
-##alsrms002 first commit
->>>>>>> dc827d2 (first commit)
