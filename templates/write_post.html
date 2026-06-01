@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>글쓰기</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    .header {
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #222;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.nav-logo {
+  height: 36px;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: #03c75a;
+  font-weight: bold;
+}
+    body {
+      background-color: #f5f6f7;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .write-wrap {
+      max-width: 900px;
+      margin: 50px auto;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 30px;
+    }
+
+    .write-wrap h1 {
+      margin-top: 0;
+      font-size: 26px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+
+    .write-form label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .write-form input,
+    .write-form textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .write-form textarea {
+      height: 300px;
+      resize: vertical;
+    }
+
+    .button-area {
+      margin-top: 25px;
+      text-align: right;
+    }
+
+    .submit-btn {
+      background-color: #03c75a;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .cancel-btn {
+      display: inline-block;
+      color: #333;
+      text-decoration: none;
+      border: 1px solid #ccc;
+      padding: 9px 18px;
+      margin-right: 8px;
+      border-radius: 4px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+  <nav class="navbar">
+    <a href="/" class="logo-area">
+      <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo">
+      <span>SUDO</span>
+    </a>
+
+    <ul class="nav-menu">
+      <li><a href="/">홈</a></li>
+      <li><a href="/intro">소개</a></li>
+      <li><a href="/board" class="active">게시판</a></li>
+      <li><a href="/apply">지원하기</a></li>
+    </ul>
+  </nav>
+</header>
+  <div class="write-wrap">
+    <h1>게시글 작성</h1>
+
+    <form class="write-form" action="{{ url_for('write_post') }}" method="post">
+      <label>작성자</label>
+      <input type="text" name="writer" placeholder="작성자 이름을 입력하세요" required>
+
+      <label>제목</label>
+      <input type="text" name="title" placeholder="제목을 입력하세요" required>
+
+      <label>내용</label>
+      <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
+
+      <div class="button-area">
+        <a href="{{ url_for('board') }}" class="cancel-btn">취소</a>
+        <button type="submit" class="submit-btn">등록</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

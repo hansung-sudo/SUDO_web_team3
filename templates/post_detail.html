@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ post.title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    body {
+      background-color: #f5f6f7;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      background-color: white;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      box-sizing: border-box;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #222;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .nav-logo {
+      height: 36px;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      color: #03c75a;
+      font-weight: bold;
+    }
+
+    .detail-wrap {
+      max-width: 900px;
+      margin: 50px auto;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .post-header {
+      padding: 25px 30px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .post-header h1 {
+      margin: 0 0 12px 0;
+      font-size: 24px;
+    }
+
+    .post-info {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .post-content {
+      padding: 35px 30px;
+      min-height: 250px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .comment-area {
+      padding: 25px 30px;
+      background-color: #fafafa;
+    }
+
+    .comment-area h2 {
+      font-size: 18px;
+      margin-top: 0;
+    }
+
+    .comment-item {
+      background: white;
+      border: 1px solid #e5e5e5;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .comment-info {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 6px;
+    }
+
+    .comment-content {
+      font-size: 14px;
+      color: #222;
+    }
+
+    .comment-form {
+      margin-top: 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .comment-form input[name="writer"] {
+      width: 120px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .comment-form input[name="content"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .comment-form button {
+      background-color: #03c75a;
+      color: white;
+      border: none;
+      padding: 0 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .bottom-area {
+      padding: 20px 30px;
+      text-align: right;
+    }
+
+    .list-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 8px 16px;
+      border-radius: 4px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="{{ url_for('index') }}" class="logo-area">
+        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo">
+        <span>SUDO</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="{{ url_for('index') }}">홈</a></li>
+        <li><a href="{{ url_for('intro') }}">소개</a></li>
+        <li><a href="{{ url_for('board') }}" class="active">게시판</a></li>
+        <li><a href="{{ url_for('apply') }}">지원하기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="detail-wrap">
+    <div class="post-header">
+      <h1>{{ post.title }}</h1>
+      <div class="post-info">
+        작성자 {{ post.writer }} |
+        작성일 {{ post.created_at }} |
+        조회 {{ post.views }}
+      </div>
+    </div>
+
+    <div class="post-content">{{ post.content }}</div>
+
+    <div class="comment-area">
+      <h2>댓글 {{ comments|length }}</h2>
+
+      {% if comments %}
+        {% for comment in comments %}
+          <div class="comment-item">
+            <div class="comment-info">
+              {{ comment.writer }} · {{ comment.created_at }}
+            </div>
+            <div class="comment-content">
+              {{ comment.content }}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>아직 댓글이 없습니다.</p>
+      {% endif %}
+
+      <form class="comment-form" action="{{ url_for('add_comment', post_id=post.id) }}" method="post">
+        <input type="text" name="writer" placeholder="작성자" required>
+        <input type="text" name="content" placeholder="댓글을 입력하세요" required>
+        <button type="submit">등록</button>
+      </form>
+    </div>
+
+    <div class="bottom-area">
+      <a href="{{ url_for('board') }}" class="list-btn">목록</a>
+    </div>
+  </div>
+
+</body>
+</html>

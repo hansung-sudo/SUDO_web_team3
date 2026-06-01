@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>SUDO 게시판</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    body {
+      background-color: #f5f6f7;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      background-color: white;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      box-sizing: border-box;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #222;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .nav-logo {
+      height: 36px;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      color: #03c75a;
+      font-weight: bold;
+    }
+
+    .board-wrap {
+      max-width: 1000px;
+      margin: 50px auto;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .board-header {
+      padding: 25px 30px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .board-header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .board-header p {
+      margin-top: 8px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .board-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .post-count {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .write-btn {
+      background-color: #03c75a;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .board-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .board-table th {
+      background-color: #fafafa;
+      border-bottom: 1px solid #ddd;
+      padding: 12px;
+      color: #555;
+    }
+
+    .board-table td {
+      border-bottom: 1px solid #eee;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .board-table .title {
+      text-align: left;
+    }
+
+    .board-table .title a {
+      color: #222;
+      text-decoration: none;
+    }
+
+    .board-table .title a:hover {
+      text-decoration: underline;
+    }
+
+    .empty-row {
+      padding: 40px;
+      text-align: center;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <a href="{{ url_for('index') }}" class="logo-area">
+        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo">
+        <span>SUDO</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="{{ url_for('index') }}">홈</a></li>
+        <li><a href="{{ url_for('intro') }}">소개</a></li>
+        <li><a href="{{ url_for('board') }}" class="active">게시판</a></li>
+        <li><a href="{{ url_for('apply') }}">지원하기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="board-wrap">
+    <div class="board-header">
+      <h1>SUDO 게시판</h1>
+      <p>팀원들과 자유롭게 글을 작성하고 댓글을 남길 수 있는 공간입니다.</p>
+    </div>
+
+    <div class="board-top">
+      <span class="post-count">전체글 {{ posts|length }}개</span>
+      <a href="{{ url_for('write_post') }}" class="write-btn">글쓰기</a>
+    </div>
+
+    <table class="board-table">
+      <thead>
+        <tr>
+          <th style="width: 80px;">번호</th>
+          <th>제목</th>
+          <th style="width: 120px;">작성자</th>
+          <th style="width: 160px;">작성일</th>
+          <th style="width: 80px;">조회</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% if posts %}
+          {% for post in posts %}
+            <tr>
+              <td>{{ post.id }}</td>
+              <td class="title">
+                <a href="{{ url_for('post_detail', post_id=post.id) }}">
+                  {{ post.title }}
+                </a>
+              </td>
+              <td>{{ post.writer }}</td>
+              <td>{{ post.created_at }}</td>
+              <td>{{ post.views }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="empty-row">아직 작성된 게시글이 없습니다.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
