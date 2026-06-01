@@ -1,220 +1,406 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SUDO 게시판</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 
   <style>
-    body {
-      background-color: #f5f6f7;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+    .dropdown { position: relative; display: inline-block; }
+    .menu-toggle { background:transparent; border:none; padding:8px; cursor:pointer; display:flex; align-items:center; }
+    .brand-area { display:flex; align-items:center; gap:0.75rem; }
+    .theme-toggle { width:42px; height:42px; border-radius:50%; border:1px solid rgba(0,0,0,0.12); background:rgba(255,255,255,0.9); color:#111; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: background 220ms ease, border-color 220ms ease, color 220ms ease; }
+    .theme-toggle:hover { background:rgba(0,0,0,0.04); }
 
-    .header {
-      background-color: white;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
+    .hamburger { width:22px; height:16px; display:inline-block; position:relative; }
+    .hamburger span { position:absolute; left:0; right:0; height:2px; background:#111; display:block; transition:transform 200ms ease, opacity 200ms ease; }
+    .hamburger span:nth-child(1) { top:0; }
+    .hamburger span:nth-child(2) { top:7px; }
+    .hamburger span:nth-child(3) { top:14px; }
 
-    .navbar {
-      max-width: 1100px;
+    .menu-toggle.open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open .hamburger span:nth-child(2) { opacity:0; }
+    .menu-toggle.open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); background:#fff; border:1px solid #ddd; box-shadow:0 6px 18px rgba(0,0,0,0.08); list-style:none; padding:8px 0; margin:0; min-width:160px; z-index:200; opacity:0; transform: translateY(-8px) scaleY(0.98); transform-origin: top right; pointer-events:none; transition: opacity 220ms ease, transform 220ms ease; border-radius:6px; }
+    .dropdown-menu.open { opacity:1; transform: translateY(0) scaleY(1); pointer-events:auto; }
+    .dropdown-menu li a { display:block; padding:8px 16px; color:#111; text-decoration:none; }
+    .dropdown-menu li a:hover { background:#f3f4f6; }
+
+    .logo-area { gap:0.25rem; }
+    .logo-area .nav-logo { transform:translateY(3px); }
+
+    .board-main {
+      max-width: 1200px;
       margin: 0 auto;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      box-sizing: border-box;
+      padding: 3rem 2rem 0;
     }
 
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #222;
-      font-weight: bold;
-      font-size: 22px;
+    .board-hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(45, 212, 191, 0.12)),
+        var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 3rem;
+      box-shadow: 0 8px 24px var(--shadow);
+      margin-bottom: 2rem;
     }
 
-    .nav-logo {
-      height: 36px;
+    .board-hero::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(90deg, rgba(14,165,233,0.08) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(45,212,191,0.06) 0 1px, transparent 1px 44px);
+      pointer-events:none;
     }
 
-    .nav-menu {
-      display: flex;
-      list-style: none;
-      gap: 30px;
-      margin: 0;
-      padding: 0;
+    .board-hero-content {
+      position: relative;
+      z-index: 1;
     }
 
-    .nav-menu a {
-      text-decoration: none;
-      color: #333;
-      font-size: 15px;
-      font-weight: 500;
+    .board-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--soft-blue);
+      color: var(--primary-dark);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
 
-    .nav-menu a:hover,
-    .nav-menu a.active {
-      color: #03c75a;
-      font-weight: bold;
+    .board-hero h1 {
+      font-size: 2.6rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--text);
     }
 
-    .board-wrap {
-      max-width: 1000px;
-      margin: 50px auto;
-      background: white;
-      border: 1px solid #ddd;
+    .board-hero h1 span {
+      color: var(--primary);
     }
 
-    .board-header {
-      padding: 25px 30px;
-      border-bottom: 1px solid #ddd;
+    .board-hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
     }
 
-    .board-header h1 {
-      margin: 0;
-      font-size: 26px;
-    }
-
-    .board-header p {
-      margin-top: 8px;
-      color: #666;
-      font-size: 14px;
+    .board-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px var(--shadow);
+      overflow: hidden;
     }
 
     .board-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 30px;
-      border-bottom: 1px solid #eee;
+      padding: 1.4rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(90deg, var(--soft-blue), transparent);
     }
 
     .post-count {
-      font-size: 14px;
-      color: #555;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
     }
 
     .write-btn {
-      background-color: #03c75a;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 4px;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .write-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
     }
 
     .board-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      font-size: 0.95rem;
     }
 
     .board-table th {
-      background-color: #fafafa;
-      border-bottom: 1px solid #ddd;
-      padding: 12px;
-      color: #555;
+      background-color: rgba(224, 242, 254, 0.55);
+      color: var(--muted);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
     }
 
     .board-table td {
-      border-bottom: 1px solid #eee;
-      padding: 12px;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
       text-align: center;
+      color: var(--text);
+    }
+
+    .board-table tr:hover td {
+      background-color: rgba(224, 242, 254, 0.3);
     }
 
     .board-table .title {
       text-align: left;
+      font-weight: 600;
     }
 
     .board-table .title a {
-      color: #222;
+      color: var(--text);
       text-decoration: none;
     }
 
     .board-table .title a:hover {
-      text-decoration: underline;
+      color: var(--primary);
     }
 
     .empty-row {
-      padding: 40px;
+      padding: 3rem;
       text-align: center;
-      color: #777;
+      color: var(--muted);
+    }
+
+    .dark-theme body { background:#0b1120; color:#e3e8ff; }
+    .dark-theme .header { background:#090d19; box-shadow:0 2px 12px rgba(0,0,0,0.35); }
+    .dark-theme .logo-area { color:#f8fafc; }
+    .dark-theme .menu-toggle .hamburger span { background:#f8fafc; }
+    .dark-theme .theme-toggle { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18); color:#f8fafc; }
+    .dark-theme .dropdown-menu { background:#111827; border-color:#334155; box-shadow:0 12px 26px rgba(0,0,0,0.35); }
+    .dark-theme .dropdown-menu li a { color:#e2e8f0; }
+    .dark-theme .dropdown-menu li a:hover { background:#1f2937; }
+
+    .dark-theme .board-hero {
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(45, 212, 191, 0.08)),
+        #111827;
+      border-color:#334155;
+      box-shadow:0 12px 26px rgba(0,0,0,0.35);
+    }
+
+    .dark-theme .board-hero::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(96,165,250,0.12) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(96,165,250,0.1) 0 1px, transparent 1px 44px);
+    }
+
+    .dark-theme .board-badge { background-color:#1e293b; color:#93c5fd; }
+    .dark-theme .board-hero h1 { color:#f8fafc; }
+    .dark-theme .board-hero p { color:#cbd5e1; }
+
+    .dark-theme .board-card {
+      background:#111827;
+      border-color:#334155;
+      box-shadow:0 12px 26px rgba(0,0,0,0.35);
+    }
+
+    .dark-theme .board-top {
+      background: linear-gradient(90deg, rgba(30, 41, 59, 0.9), transparent);
+      border-color:#334155;
+    }
+
+    .dark-theme .post-count { color:#cbd5e1; }
+    .dark-theme .write-btn { background:#2563eb; }
+    .dark-theme .write-btn:hover { background:#1d4ed8; }
+
+    .dark-theme .board-table th {
+      background:#1e293b;
+      color:#cbd5e1;
+      border-color:#334155;
+    }
+
+    .dark-theme .board-table td {
+      color:#e2e8f0;
+      border-color:#334155;
+    }
+
+    .dark-theme .board-table tr:hover td {
+      background:#1f2937;
+    }
+
+    .dark-theme .board-table .title a {
+      color:#f8fafc;
+    }
+
+    .dark-theme .board-table .title a:hover {
+      color:#93c5fd;
+    }
+
+    .dark-theme .empty-row { color:#94a3b8; }
+    .dark-theme .footer { background-color:#0f172a; color:#cbd5e1; }
+
+    @media (max-width: 768px) {
+      .board-main {
+        padding: 2rem 1rem 0;
+      }
+
+      .board-hero {
+        padding: 2rem;
+      }
+
+      .board-hero h1 {
+        font-size: 2rem;
+      }
+
+      .board-table th:nth-child(1),
+      .board-table td:nth-child(1),
+      .board-table th:nth-child(4),
+      .board-table td:nth-child(4) {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
-
   <header class="header">
     <nav class="navbar">
-      <a href="{{ url_for('index') }}" class="logo-area">
-        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo">
-        <span>SUDO</span>
-      </a>
+      <div class="brand-area">
+        <a href="/" class="logo-area">
+          <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo" />
+          <span>SUDO</span>
+        </a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
 
-      <ul class="nav-menu">
-        <li><a href="{{ url_for('index') }}">홈</a></li>
-        <li><a href="{{ url_for('intro') }}">소개</a></li>
-        <li><a href="{{ url_for('board') }}" class="active">게시판</a></li>
-        <li><a href="{{ url_for('apply') }}">지원하기</a></li>
-      </ul>
+      <div class="dropdown" id="mainMenu">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+          <span class="hamburger"><span></span><span></span><span></span></span>
+        </button>
+        <ul class="dropdown-menu" id="dropdownMenu">
+          <li><a href="/intro">소개</a></li>
+          <li><a href="/board">게시판</a></li>
+          <li><a href="/apply">지원</a></li>
+        </ul>
+      </div>
     </nav>
   </header>
 
-  <div class="board-wrap">
-    <div class="board-header">
-      <h1>SUDO 게시판</h1>
-      <p>팀원들과 자유롭게 글을 작성하고 댓글을 남길 수 있는 공간입니다.</p>
-    </div>
+  <main class="board-main">
+    <section class="board-hero">
+      <div class="board-hero-content">
+        <p class="board-badge">SUDO Community Board</p>
+        <h1>함께 공유하는<br><span>SUDO 게시판</span></h1>
+        <p>스터디 공지, 프로젝트 기록, 팀원 간 질문을 자유롭게 남길 수 있는 공간입니다.</p>
+      </div>
+    </section>
 
-    <div class="board-top">
-      <span class="post-count">전체글 {{ posts|length }}개</span>
-      <a href="{{ url_for('write_post') }}" class="write-btn">글쓰기</a>
-    </div>
+    <section class="board-card">
+      <div class="board-top">
+        <span class="post-count">전체글 {{ posts|length }}개</span>
+        <a href="{{ url_for('write_post') }}" class="write-btn">글쓰기</a>
+      </div>
 
-    <table class="board-table">
-      <thead>
-        <tr>
-          <th style="width: 80px;">번호</th>
-          <th>제목</th>
-          <th style="width: 120px;">작성자</th>
-          <th style="width: 160px;">작성일</th>
-          <th style="width: 80px;">조회</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% if posts %}
-          {% for post in posts %}
-            <tr>
-              <td>{{ post.id }}</td>
-              <td class="title">
-                <a href="{{ url_for('post_detail', post_id=post.id) }}">
-                  {{ post.title }}
-                </a>
-              </td>
-              <td>{{ post.writer }}</td>
-              <td>{{ post.created_at }}</td>
-              <td>{{ post.views }}</td>
-            </tr>
-          {% endfor %}
-        {% else %}
+      <table class="board-table">
+        <thead>
           <tr>
-            <td colspan="5" class="empty-row">아직 작성된 게시글이 없습니다.</td>
+            <th style="width: 80px;">번호</th>
+            <th>제목</th>
+            <th style="width: 120px;">작성자</th>
+            <th style="width: 160px;">작성일</th>
+            <th style="width: 80px;">조회</th>
           </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </div>
+        </thead>
 
+        <tbody>
+          {% if posts %}
+            {% for post in posts %}
+              <tr>
+                <td>{{ post.id }}</td>
+                <td class="title">
+                  <a href="{{ url_for('post_detail', post_id=post.id) }}">
+                    {{ post.title }}
+                  </a>
+                </td>
+                <td>{{ post.writer }}</td>
+                <td>{{ post.created_at }}</td>
+                <td>{{ post.views }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" class="empty-row">아직 작성된 게시글이 없습니다.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 SUDO Study. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function(){
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('dropdownMenu');
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+
+      const setTheme = (dark) => {
+        if (dark) {
+          root.classList.add('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to light mode');
+          if (themeToggle) themeToggle.textContent = '☀️';
+        } else {
+          root.classList.remove('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to dark mode');
+          if (themeToggle) themeToggle.textContent = '🌙';
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      themeToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setTheme(!root.classList.contains('dark-theme'));
+      });
+
+      if (!toggle || !menu) return;
+
+      toggle.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('open');
+
+        if (isOpen) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        } else {
+          menu.classList.add('open');
+          toggle.classList.add('open');
+          toggle.setAttribute('aria-expanded','true');
+        }
+      });
+
+      document.addEventListener('click', (e)=>{
+        if (!menu.classList.contains('open')) return;
+
+        if (!e.target.closest('#mainMenu')){
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded','false');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
