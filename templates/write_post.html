@@ -1,169 +1,491 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8">
-  <title>글쓰기</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>글쓰기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-  <style>
-    .header {
-  background-color: white;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+    <style>
+        body {
+            background-color: #f5f6f7;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-.navbar {
-  max-width: 1100px;
-  margin: 0 auto;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-}
+        .header {
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #222;
-  font-weight: bold;
-  font-size: 22px;
-}
+        .navbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
 
-.nav-logo {
-  height: 36px;
-}
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+            font-size: 22px;
+        }
 
-.nav-menu {
-  display: flex;
-  list-style: none;
-  gap: 30px;
-  margin: 0;
-  padding: 0;
-}
+        .nav-logo {
+            height: 36px;
+        }
 
-.nav-menu a {
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  font-weight: 500;
-}
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
 
-.nav-menu a:hover,
-.nav-menu a.active {
-  color: #03c75a;
-  font-weight: bold;
-}
-    body {
-      background-color: #f5f6f7;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+        }
 
-    .write-wrap {
-      max-width: 900px;
-      margin: 50px auto;
-      background: white;
-      border: 1px solid #ddd;
-      padding: 30px;
-    }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #03c75a;
+            font-weight: bold;
+        }
 
-    .write-wrap h1 {
-      margin-top: 0;
-      font-size: 26px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 15px;
-    }
+        .write-wrap {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 30px;
+            box-sizing: border-box;
+        }
 
-    .write-form label {
-      display: block;
-      margin-top: 18px;
-      margin-bottom: 8px;
-      font-weight: bold;
-      font-size: 14px;
-    }
+        .write-wrap h1 {
+            margin-top: 0;
+            font-size: 26px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
 
-    .write-form input,
-    .write-form textarea {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      padding: 12px;
-      font-size: 15px;
-    }
+        .write-form label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-    .write-form textarea {
-      height: 300px;
-      resize: vertical;
-    }
+        .write-form input,
+        .write-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            padding: 12px;
+            font-size: 15px;
+        }
 
-    .button-area {
-      margin-top: 25px;
-      text-align: right;
-    }
+        .write-form textarea {
+            height: 300px;
+            resize: vertical;
+        }
 
-    .submit-btn {
-      background-color: #03c75a;
-      color: white;
-      border: none;
-      padding: 10px 22px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 4px;
-    }
+        .button-area {
+            margin-top: 25px;
+            text-align: right;
+        }
 
-    .cancel-btn {
-      display: inline-block;
-      color: #333;
-      text-decoration: none;
-      border: 1px solid #ccc;
-      padding: 9px 18px;
-      margin-right: 8px;
-      border-radius: 4px;
-      background: white;
-    }
-  </style>
+        .submit-btn {
+            background-color: #03c75a;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .cancel-btn {
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            padding: 9px 18px;
+            margin-right: 8px;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .dark-theme body {
+            background-color: #0b1120;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .header {
+            background-color: #090d19;
+            border-bottom-color: #334155;
+        }
+
+        .dark-theme .logo-area {
+            color: #f8fafc;
+        }
+
+        .dark-theme .nav-menu a {
+            color: #e2e8f0;
+        }
+
+        .dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .dark-theme .write-wrap,
+        .dark-theme .detail-wrap,
+        .dark-theme .board-card {
+            background-color: #111827;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .dark-theme input,
+        .dark-theme textarea {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .dark-theme input::placeholder,
+        .dark-theme textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .header {
+            background-color: var(--white, #ffffff);
+            border-bottom: 1px solid var(--border, #e5e7eb);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 12px var(--shadow, rgba(0, 0, 0, 0.06));
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-sizing: border-box;
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            text-decoration: none;
+            color: var(--text, #111827);
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .nav-logo {
+            height: 38px;
+            transform: translateY(3px);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text, #111827);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary, #2563eb);
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--border, #e5e7eb);
+            background: var(--white, #ffffff);
+            color: var(--text, #111827);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            box-shadow: 0 4px 12px var(--shadow, rgba(0, 0, 0, 0.08));
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            background-color: var(--soft-blue, #e0f2fe);
+        }
+
+        /* 목록/삭제 버튼 UI 개선 */
+        .bottom-area {
+            padding: 22px 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid var(--border, #e5e7eb);
+        }
+
+        .list-btn,
+        .delete-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 78px;
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .list-btn {
+            color: var(--text, #111827);
+            background: var(--white, #ffffff);
+            border: 1px solid var(--border, #e5e7eb);
+        }
+
+        .list-btn:hover {
+            background: var(--soft-blue, #e0f2fe);
+            color: var(--primary, #2563eb);
+        }
+
+        .delete-btn {
+            color: white;
+            background: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* 다크모드 */
+        .dark-theme body {
+            background-color: #0b1120;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .header {
+            background-color: #090d19;
+            border-bottom-color: #334155;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .dark-theme .logo-area,
+        .dark-theme .nav-menu a {
+            color: #f8fafc;
+        }
+
+        .dark-theme .nav-menu a:hover,
+        .dark-theme .nav-menu a.active {
+            color: #93c5fd;
+        }
+
+        .dark-theme .theme-toggle {
+            background-color: #111827;
+            color: #f8fafc;
+            border-color: #334155;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .dark-theme .theme-toggle:hover {
+            background-color: #1e293b;
+        }
+
+        .dark-theme .write-wrap,
+        .dark-theme .detail-wrap {
+            background-color: #111827;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .write-wrap h1,
+        .dark-theme .post-header h1,
+        .dark-theme .comment-area h2 {
+            color: #f8fafc;
+        }
+
+        .dark-theme .post-header,
+        .dark-theme .post-content,
+        .dark-theme .comment-area,
+        .dark-theme .bottom-area {
+            border-color: #334155;
+        }
+
+        .dark-theme .post-info,
+        .dark-theme .comment-info {
+            color: #94a3b8;
+        }
+
+        .dark-theme .comment-area {
+            background-color: #0f172a;
+        }
+
+        .dark-theme .comment-item {
+            background-color: #111827;
+            border-color: #334155;
+        }
+
+        .dark-theme .comment-content {
+            color: #e2e8f0;
+        }
+
+        .dark-theme input,
+        .dark-theme textarea {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .dark-theme input::placeholder,
+        .dark-theme textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .dark-theme .list-btn {
+            background-color: #111827;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .dark-theme .list-btn:hover {
+            background-color: #1e293b;
+            color: #93c5fd;
+        }
+    </style>
 </head>
+
 <body>
-<header class="header">
-  <nav class="navbar">
-    <a href="/" class="logo-area">
-      <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo">
-      <span>SUDO</span>
-    </a>
 
-    <ul class="nav-menu">
-      <li><a href="/">홈</a></li>
-      <li><a href="/intro">소개</a></li>
-      <li><a href="/board" class="active">게시판</a></li>
-      <li><a href="/apply">지원하기</a></li>
-    </ul>
-  </nav>
-</header>
-  <div class="write-wrap">
-    <h1>게시글 작성</h1>
+    <header class="header">
+        <nav class="navbar">
+            <div class="brand-area">
+                <a href="/" class="logo-area">
+                    <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo"
+                        class="nav-logo">
+                    <span>SUDO</span>
+                </a>
 
-    <form class="write-form" action="{{ url_for('write_post') }}" method="post">
-      <label>작성자</label>
-      <input type="text" name="writer" placeholder="작성자 이름을 입력하세요" required>
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="다크모드 전환">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
 
-      <label>제목</label>
-      <input type="text" name="title" placeholder="제목을 입력하세요" required>
+            <ul class="nav-menu">
+                <li><a href="/">홈</a></li>
+                <li><a href="/intro">소개</a></li>
+                <li><a href="/board" class="active">게시판</a></li>
+                <li><a href="/apply">지원하기</a></li>
+            </ul>
+        </nav>
+    </header>
 
-      <label>내용</label>
-      <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
+    <div class="write-wrap">
+        <h1>게시글 작성</h1>
 
-      <div class="button-area">
-        <a href="{{ url_for('board') }}" class="cancel-btn">취소</a>
-        <button type="submit" class="submit-btn">등록</button>
-      </div>
-    </form>
-  </div>
+        <form class="write-form" action="{{ url_for('write_post') }}" method="post">
+            <label>작성자</label>
+            <input type="text" value="{{ visitor_name }}" readonly>
 
+            <label>삭제 비밀번호</label>
+            <input type="password" name="password" placeholder="숫자 4자리" maxlength="4" pattern="[0-9]{4}" required>
+
+            <label>제목</label>
+            <input type="text" name="title" placeholder="제목을 입력하세요" required>
+
+            <label>내용</label>
+            <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
+
+            <div class="button-area">
+                <a href="{{ url_for('board') }}" class="cancel-btn">취소</a>
+                <button type="submit" class="submit-btn">등록</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        (function () {
+            const themeToggle = document.getElementById('themeToggle');
+            const root = document.documentElement;
+
+            const setTheme = (dark) => {
+                if (dark) {
+                    root.classList.add('dark-theme');
+
+                    if (themeToggle) {
+                        themeToggle.textContent = '☀️';
+                        themeToggle.setAttribute('aria-label', 'Switch to light mode');
+                    }
+                } else {
+                    root.classList.remove('dark-theme');
+
+                    if (themeToggle) {
+                        themeToggle.textContent = '🌙';
+                        themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+                    }
+                }
+
+                localStorage.setItem('theme', dark ? 'dark' : 'light');
+            };
+
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    setTheme(!root.classList.contains('dark-theme'));
+                });
+            }
+        })();
+    </script>
 </body>
+
 </html>
