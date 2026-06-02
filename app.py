@@ -11,6 +11,7 @@ def index():
 def intro():
     return render_template("intro.html")
 
+
 @app.route("/board")
 def board():
     return render_template("board.html")
