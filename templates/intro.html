@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUDO 소개</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    /* 상단 내비게이션 드롭다운과 테마 버튼 스타일 */
+    .dropdown { position: relative; display: inline-block; }
+    .menu-toggle { background: transparent; border: none; padding: 8px; cursor: pointer; display: flex; align-items: center; }
+    .brand-area { display: flex; align-items: center; gap: 0.75rem; }
+    .theme-toggle { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.9); color: #111; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 220ms ease, border-color 220ms ease, color 220ms ease; }
+    .theme-toggle:hover { background: rgba(0,0,0,0.04); }
+    .hamburger { width: 22px; height: 16px; display: inline-block; position: relative; }
+    .hamburger span { position: absolute; left: 0; right: 0; height: 2px; background: #111; display: block; transition: transform 200ms ease, opacity 200ms ease; }
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 7px; }
+    .hamburger span:nth-child(3) { top: 14px; }
+    .menu-toggle.open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open .hamburger span:nth-child(2) { opacity: 0; }
+    .menu-toggle.open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); background: #fff; border: 1px solid #ddd; box-shadow: 0 6px 18px rgba(0,0,0,0.08); list-style: none; padding: 8px 0; margin: 0; min-width: 160px; z-index: 200; opacity: 0; transform: translateY(-8px) scaleY(0.98); transform-origin: top right; pointer-events: none; transition: opacity 220ms ease, transform 220ms ease; border-radius: 6px; }
+    .dropdown-menu.open { opacity: 1; transform: translateY(0) scaleY(1); pointer-events: auto; }
+    .dropdown-menu li a { display: block; padding: 8px 16px; color: #111; text-decoration: none; }
+    .dropdown-menu li a:hover { background: #f3f4f6; }
+    .logo-area { gap: 0.25rem; }
+    .logo-area .nav-logo { transform: translateY(3px); }
+
+    /* 소개 페이지 전용 레이아웃 */
+    .intro-section { padding: 4rem 0; position: relative; overflow: hidden; }
+    .intro-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(0,123,255,0.08) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(0,123,255,0.06) 0 1px, transparent 1px 44px);
+      mask-image: linear-gradient(90deg, rgba(0,0,0,0.34), rgba(0,0,0,0.14) 48%, rgba(0,0,0,0.34));
+      pointer-events: none;
+      z-index: 0;
+    }
+    .intro-ai-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+    .intro-ai-trace { position: absolute; height: 2px; background: linear-gradient(90deg, transparent, rgba(0,123,255,0.36), transparent); opacity: 0.55; animation: introTracePulse 4s ease-in-out infinite; }
+    .intro-ai-trace::before,
+    .intro-ai-trace::after { content: ""; position: absolute; top: 50%; width: 8px; height: 8px; border: 1px solid rgba(0,123,255,0.42); background: rgba(249,249,249,0.9); transform: translateY(-50%) rotate(45deg); }
+    .intro-ai-trace::before { left: 18%; }
+    .intro-ai-trace::after { right: 12%; }
+    .intro-ai-trace:nth-child(1) { top: 22%; left: 5%; width: 38%; }
+    .intro-ai-trace:nth-child(2) { display: none; }
+    .intro-ai-trace:nth-child(3) { display: none; }
+    .intro-ai-chip { position: absolute; right: 8%; bottom: 12%; width: 56px; height: 38px; border: 1px solid rgba(0,123,255,0.24); border-radius: 6px; background: rgba(255,255,255,0.32); }
+    .intro-ai-chip::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(0,123,255,0.28); border-radius: 3px; }
+    .intro-section .section-title,
+    .intro-grid { position: relative; z-index: 2; }
+    .intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .intro-card { background: rgba(255,255,255,0.94); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); padding: 2rem; border-top: 4px solid #007bff; }
+    .intro-card h3 { color: #007bff; font-size: 1.5rem; margin-bottom: 0.8rem; }
+    .intro-card p { color: #666; }
+    .intro-label { display: inline-block; color: #555; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; }
+
+    /* 다크 모드에서 사용할 색상 오버라이드 */
+    .dark-theme body { background: #0b1120; color: #e3e8ff; }
+    .dark-theme .header { background: #090d19; box-shadow: 0 2px 12px rgba(0,0,0,0.35); }
+    .dark-theme .logo-area { color: #f8fafc; }
+    .dark-theme .menu-toggle .hamburger span { background: #f8fafc; }
+    .dark-theme .theme-toggle { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #f8fafc; }
+    .dark-theme .dropdown-menu { background: #111827; border-color: #334155; box-shadow: 0 12px 26px rgba(0,0,0,0.35); }
+    .dark-theme .dropdown-menu li a { color: #e2e8f0; }
+    .dark-theme .dropdown-menu li a:hover { background: #1f2937; }
+    .dark-theme .intro-section::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(96,165,250,0.12) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(96,165,250,0.1) 0 1px, transparent 1px 44px);
+    }
+    .dark-theme .intro-ai-trace { background: linear-gradient(90deg, transparent, rgba(96,165,250,0.55), transparent); }
+    .dark-theme .intro-ai-trace::before,
+    .dark-theme .intro-ai-trace::after { border-color: rgba(147,197,253,0.55); background: rgba(15,23,42,0.88); }
+    .dark-theme .intro-ai-chip { border-color: rgba(147,197,253,0.26); background: rgba(15,23,42,0.28); }
+    .dark-theme .intro-ai-chip::before { border-color: rgba(147,197,253,0.34); }
+    .dark-theme .intro-card p,
+    .dark-theme .section-title p { color: #cbd5e1; }
+    .dark-theme .intro-card { background: rgba(17,24,39,0.94); box-shadow: 0 10px 24px rgba(0,0,0,0.26); }
+    .dark-theme .intro-label { color: #94a3b8; }
+    .dark-theme .footer { background-color: #0f172a; color: #cbd5e1; }
+
+    @keyframes introTracePulse {
+      0%, 100% { opacity: 0.24; transform: translateX(0); }
+      50% { opacity: 0.68; transform: translateX(12px); }
+    }
+
+    /* 모바일 화면에서 소개 카드 여백을 줄여 가독성 유지 */
+    @media (max-width: 768px) {
+      .intro-section { padding: 3rem 0; }
+      .intro-card { padding: 1.5rem; }
+      .intro-ai-trace:nth-child(1) { left: -12%; width: 70%; }
+      .intro-ai-trace:nth-child(2) { right: -18%; width: 76%; }
+      .intro-ai-trace:nth-child(3),
+      .intro-ai-chip { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <!-- 로고와 다크 모드 전환 버튼 -->
+      <div class="brand-area">
+        <a href="/" class="logo-area">
+          <img src="/static/assets/sudo-logo.png" alt="SUDO Logo" class="nav-logo" />
+          <span>SUDO</span>
+        </a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
+
+      <!-- 햄버거 버튼을 누르면 소개/게시판/지원 메뉴가 열림 -->
+      <div class="dropdown" id="mainMenu">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+          <span class="hamburger"><span></span><span></span><span></span></span>
+        </button>
+        <ul class="dropdown-menu" id="dropdownMenu">
+          <li><a href="/intro">소개</a></li>
+          <li><a href="/board">게시판</a></li>
+          <li><a href="/apply">지원</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SUDO 내부 팀 소개 영역 -->
+    <section class="intro-section">
+      <div class="intro-ai-bg" aria-hidden="true">
+        <span class="intro-ai-trace"></span>
+        <span class="intro-ai-trace"></span>
+        <span class="intro-ai-trace"></span>
+        <span class="intro-ai-chip"></span>
+      </div>
+      <div class="section-title">
+        <h2>SUDO의 <span>두 팀</span></h2>
+        <p>각자의 성장 단계에 맞춰 프로젝트와 개발 경험을 쌓아갑니다.</p>
+      </div>
+
+      <div class="intro-grid">
+        <article class="intro-card">
+          <span class="intro-label">Junior Developer Track</span>
+          <h3>해커톤 크루</h3>
+          <p>
+            해커톤 크루는 주니어 단계의 개발자들이 모여 프로젝트를 개발하는 팀입니다.
+            GitHub를 활용한 협업 과정을 경험하며 기획, 구현, 피드백, 개선을 함께
+            진행하고 실전 프로젝트 감각을 키워갑니다.
+          </p>
+        </article>
+
+        <article class="intro-card">
+          <span class="intro-label">Senior Developer Track</span>
+          <h3>개발팀</h3>
+          <p>
+            개발팀은 시니어 수준의 개발자들이 더 높은 완성도와 난이도의 개발을
+            진행하는 팀입니다. 구조적인 설계, 안정적인 구현, 팀 단위의 기술적
+            성장을 목표로 깊이 있는 프로젝트를 만들어갑니다.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 SUDO Study. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function(){
+      // 메뉴 버튼, 드롭다운 메뉴, 테마 버튼 요소를 가져옴
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('dropdownMenu');
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+
+      // 다크 모드 여부에 따라 클래스와 버튼 아이콘을 변경하고 localStorage에 저장
+      const setTheme = (dark) => {
+        if (dark) {
+          root.classList.add('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to light mode');
+          if (themeToggle) themeToggle.textContent = '☀️';
+        } else {
+          root.classList.remove('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to dark mode');
+          if (themeToggle) themeToggle.textContent = '🌙';
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+
+      // 저장된 테마가 있으면 우선 적용하고, 없으면 사용자 시스템 설정을 따름
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      // 테마 버튼 클릭 시 라이트/다크 모드를 전환
+      themeToggle?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setTheme(!root.classList.contains('dark-theme'));
+      });
+
+      if (!toggle || !menu) return;
+
+      // 햄버거 버튼 클릭 시 드롭다운 메뉴 열기/닫기
+      toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isOpen = menu.classList.contains('open');
+        menu.classList.toggle('open', !isOpen);
+        toggle.classList.toggle('open', !isOpen);
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      // 메뉴 바깥 영역을 클릭하면 열린 드롭다운을 닫음
+      document.addEventListener('click', (event) => {
+        if (!menu.classList.contains('open')) return;
+        if (!event.target.closest('#mainMenu')) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
