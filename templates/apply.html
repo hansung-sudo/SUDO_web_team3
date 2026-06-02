@@ -1,41 +1,321 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>SUDO 지원하기</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUDO 지원하기</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .menu-toggle {
+      background: transparent;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      color: #111;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .hamburger {
+      width: 22px;
+      height: 16px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .hamburger span {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #111;
+      display: block;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+
+    .hamburger span:nth-child(1) {
+      top: 0;
+    }
+
+    .hamburger span:nth-child(2) {
+      top: 7px;
+    }
+
+    .hamburger span:nth-child(3) {
+      top: 14px;
+    }
+
+    .menu-toggle.open .hamburger span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle.open .hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.open .hamburger span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      list-style: none;
+      padding: 8px 0;
+      margin: 0;
+      min-width: 160px;
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(-8px) scaleY(0.98);
+      transform-origin: top right;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+      border-radius: 6px;
+    }
+
+    .dropdown-menu.open {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 8px 16px;
+      color: #111;
+      text-decoration: none;
+    }
+
+    .dropdown-menu li a:hover {
+      background: #f3f4f6;
+    }
+
+    .logo-area {
+      gap: 0.25rem;
+    }
+
+    .logo-area .nav-logo {
+      transform: translateY(3px);
+    }
+
+    .dark-theme body {
+      background: #0b1120;
+      color: #e3e8ff;
+    }
+
+    .dark-theme .header {
+      background: #090d19;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .dark-theme .logo-area {
+      color: #f8fafc;
+    }
+
+    .dark-theme .menu-toggle .hamburger span {
+      background: #f8fafc;
+    }
+
+    .dark-theme .theme-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: #f8fafc;
+    }
+
+    .dark-theme .dropdown-menu {
+      background: #111827;
+      border-color: #334155;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+    }
+
+    .dark-theme .dropdown-menu li a {
+      color: #e2e8f0;
+    }
+
+    .dark-theme .dropdown-menu li a:hover {
+      background: #1f2937;
+    }
+  </style>
 </head>
+
 <body>
+  <header class="header">
+    <nav class="navbar">
+      <div class="brand-area">
+        <a href="/" class="logo-area">
+          <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo" />
+          <span>SUDO</span>
+        </a>
 
-    <h1>SUDO 지원하기</h1>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+          🌙
+        </button>
+      </div>
 
-    <p>
-        SUDO는 개발에 관심 있는 학생들이 함께 공부하고
-        프로젝트를 진행하는 공대 스터디 동아리입니다.
-    </p>
+      <div class="dropdown" id="mainMenu">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+          <span class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
 
-    <h2>이런 분을 기다립니다</h2>
+        <ul class="dropdown-menu" id="dropdownMenu">
+          <li><a href="/">홈</a></li>
+          <li><a href="/intro">소개</a></li>
+          <li><a href="/board">게시판</a></li>
+          <li><a href="/apply">지원</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
 
-    <ul>
-        <li>개발을 처음 시작해보고 싶은 사람</li>
-        <li>GitHub와 협업을 배워보고 싶은 사람</li>
-        <li>웹사이트나 프로그램을 직접 만들어보고 싶은 사람</li>
-        <li>팀 프로젝트 경험을 쌓고 싶은 사람</li>
-    </ul>
+  <main class="apply-main">
+    <section class="apply-card">
+      <p class="badge">Join SUDO</p>
 
-    <h2>지원 방법</h2>
+      <h1>SUDO 지원하기</h1>
 
-    <p>
-        아래 버튼을 눌러 Google Form 신청서를 작성해주세요.
-    </p> 
+      <p class="apply-desc">
+        개발을 처음 시작하는 사람도 괜찮습니다.<br />
+        함께 배우고, 직접 프로젝트를 완성해보고 싶은 학생을 기다립니다.
+      </p>
 
-    <a href="https://docs.google.com/forms/d/1WV-xNfGsGyQwAiFlWR-gghSx2NBEjUrYFZDzWcSuiDM/viewform?edit_requested=true#question=1749859887&field=615988049https://docs.google.com/forms/d/1WV-xNfGsGyQwAiFlWR-gghSx2NBEjUrYFZDzWcSuiDM/edit%23question=1749859887&field=615988049" target="_blank">
-        <button>Google Form으로 지원하기</button>
-    </a>
+      <div class="apply-info">
+        <h2>이런 분을 기다립니다</h2>
 
-    <br><br>
+        <ul>
+          <li>개발을 처음 시작해보고 싶은 사람</li>
+          <li>GitHub와 협업을 배워보고 싶은 사람</li>
+          <li>웹사이트나 프로그램을 직접 만들어보고 싶은 사람</li>
+          <li>팀 프로젝트 경험을 쌓고 싶은 사람</li>
+        </ul>
+      </div>
 
-    <a href="/">홈으로</a>
+      <div class="apply-info">
+        <h2>지원 방법</h2>
+        <p>아래 버튼을 눌러 Google Form 신청서를 작성해주세요.</p>
+      </div>
 
+      <div class="hero-buttons apply-buttons">
+        <a href="https://docs.google.com/forms/d/1WV-xNfGsGyQwAiFlWR-gghSx2NBEjUrYFZDzWcSuiDM/viewform?edit_requested=true#question=1749859887&field=615988049https://docs.google.com/forms/d/1WV-xNfGsGyQwAiFlWR-gghSx2NBEjUrYFZDzWcSuiDM/edit%23question=1749859887&field=615988049" target="_blank" class="btn primary">
+          Google Form으로 지원하기
+        </a>
+
+        <a href="/" class="btn secondary">
+          홈으로
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 SUDO Study. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('dropdownMenu');
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+
+      const setTheme = (dark) => {
+        if (dark) {
+          root.classList.add('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to light mode');
+
+          if (themeToggle) {
+            themeToggle.textContent = '☀️';
+          }
+        } else {
+          root.classList.remove('dark-theme');
+          themeToggle?.setAttribute('aria-label', 'Switch to dark mode');
+
+          if (themeToggle) {
+            themeToggle.textContent = '🌙';
+          }
+        }
+
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      themeToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setTheme(!root.classList.contains('dark-theme'));
+      });
+
+      if (!toggle || !menu) {
+        return;
+      }
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        const isOpen = menu.classList.contains('open');
+
+        if (isOpen) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          menu.classList.add('open');
+          toggle.classList.add('open');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!menu.classList.contains('open')) {
+          return;
+        }
+
+        if (!e.target.closest('#mainMenu')) {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
