@@ -5,8 +5,10 @@ import uuid
 from datetime import datetime
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
-app.secret_key = "sudo-board-secret-key"
-
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "sudo-board-secret-key"
+)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "sudo.db")
 
@@ -318,6 +320,9 @@ def delete_comment(post_id, comment_id):
     return redirect(url_for("post_detail", post_id=post_id))
 
 
+# Render 배포 시에도 DB 자동 생성
+init_db()
+
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
