@@ -9,10 +9,14 @@
 
 <header class="header">
   <nav class="navbar">
-    <a href="/" class="logo-area">
-      <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" class="nav-logo">
-      <span>SUDO</span>
-    </a>
+    <div class="brand-area">
+      <a href="/" class="logo-area">
+        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" class="nav-logo" alt="SUDO Logo">
+        <span>SUDO</span>
+      </a>
+
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </div>
 
     <ul class="nav-menu">
       <li><a href="/">홈</a></li>
@@ -84,6 +88,29 @@
   <p>© 2026 SUDO Study. All rights reserved.</p>
 </footer>
 
+<script>
+  const themeToggle = document.getElementById("themeToggle");
+  const root = document.documentElement;
+
+  function setTheme(dark) {
+    if (dark) {
+      root.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    } else {
+      root.classList.remove("dark-theme");
+      themeToggle.textContent = "🌙";
+    }
+
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }
+
+  const savedTheme = localStorage.getItem("theme");
+  setTheme(savedTheme === "dark");
+
+  themeToggle.addEventListener("click", function () {
+    setTheme(!root.classList.contains("dark-theme"));
+  });
+</script>
 
 </body>
 </html>
