@@ -585,3 +585,36 @@ html.dark-theme .footer {
   background: #020617 !important;
   color: #cbd5e1 !important;
 }
+
+/* =========================
+   Apply Page Dark Mode
+========================= */
+
+html.dark-theme .apply-card {
+  background: #111827 !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35) !important;
+}
+
+html.dark-theme .apply-card h1 {
+  color: #f8fafc !important;
+}
+
+html.dark-theme .apply-desc {
+  color: #cbd5e1 !important;
+}
+
+html.dark-theme .apply-info {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+html.dark-theme .apply-info h2 {
+  color: #93c5fd !important;
+}
+
+html.dark-theme .apply-info li,
+html.dark-theme .apply-info p {
+  color: #e2e8f0 !important;
+}
