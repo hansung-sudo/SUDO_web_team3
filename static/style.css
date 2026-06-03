@@ -506,45 +506,82 @@ main {
   margin-top: 2rem;
 }
 
-/* Apply Page Dark Mode */
-.dark-theme .apply-card {
-  background: #111827;
-  border-color: #334155;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+/* =========================
+   Dark Mode Common
+========================= */
+
+.brand-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.dark-theme .apply-card h1 {
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html.dark-theme body {
+  background: #0b1120 !important;
+  color: #e3e8ff !important;
+}
+
+html.dark-theme main {
+  background: #0b1120 !important;
+}
+
+html.dark-theme .header {
+  background: #090d19 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+html.dark-theme .logo-area,
+html.dark-theme .nav-menu a {
+  color: #f8fafc !important;
+}
+
+html.dark-theme .theme-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
   color: #f8fafc;
 }
 
-.dark-theme .apply-desc {
-  color: #cbd5e1;
+html.dark-theme .section-title h2,
+html.dark-theme .topic-card h3,
+html.dark-theme .feature-card h3 {
+  color: #f8fafc !important;
 }
 
-.dark-theme .apply-info {
-  background: #1e293b;
-  border-color: #334155;
+html.dark-theme .section-title p,
+html.dark-theme .topic-card p,
+html.dark-theme .feature-card p {
+  color: #cbd5e1 !important;
 }
 
-.dark-theme .apply-info h2 {
-  color: #93c5fd;
+html.dark-theme .topic-card,
+html.dark-theme .feature-card,
+html.dark-theme .contact-form {
+  background: #111827 !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
 }
 
-.dark-theme .apply-info li,
-.dark-theme .apply-info p {
-  color: #e2e8f0;
+html.dark-theme input,
+html.dark-theme textarea {
+  background: #111827 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
 }
 
-@media (max-width: 768px) {
-  .apply-card {
-    padding: 2rem;
-  }
-
-  .apply-card h1 {
-    font-size: 2.2rem;
-  }
-
-  .apply-buttons {
-    flex-direction: column;
-  }
+html.dark-theme .footer {
+  background: #020617 !important;
+  color: #cbd5e1 !important;
 }
