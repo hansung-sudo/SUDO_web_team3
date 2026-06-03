@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 작성</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="header">
+  <nav class="navbar">
+    <a href="/" class="logo-area">
+      <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" class="nav-logo">
+      <span>SUDO</span>
+    </a>
+
+    <ul class="nav-menu">
+      <li><a href="/">홈</a></li>
+      <li><a href="/intro">소개</a></li>
+      <li><a href="/board" class="active">게시판</a></li>
+      <li><a href="/apply">지원</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="section">
+    <div class="section-title">
+      <h2>게시글 <span>작성</span></h2>
+      <p>{{ visitor_name }}님으로 글이 작성됩니다.</p>
+    </div>
+
+    <form class="contact-form" action="{{ url_for('write_post') }}" method="post">
+      <input type="text" name="title" placeholder="제목" required>
+      <textarea name="content" placeholder="내용" required></textarea>
+      <input type="password" name="password" placeholder="삭제용 비밀번호 숫자 4자리" required>
+      <button type="submit" class="btn primary">등록</button>
+    </form>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>© 2026 SUDO Study. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
