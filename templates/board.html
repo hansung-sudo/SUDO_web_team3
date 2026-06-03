@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>SUDO 게시판</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="header">
+  <nav class="navbar">
+    <a href="/" class="logo-area">
+      <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" class="nav-logo">
+      <span>SUDO</span>
+    </a>
+
+    <ul class="nav-menu">
+      <li><a href="/">홈</a></li>
+      <li><a href="/intro">소개</a></li>
+      <li><a href="/board" class="active">게시판</a></li>
+      <li><a href="/apply">지원</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="section">
+    <div class="section-title">
+      <h2>SUDO <span>게시판</span></h2>
+      <p>공지사항과 자유 게시글을 확인할 수 있습니다.</p>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 20px;">
+      <a href="{{ url_for('write_post') }}" class="btn primary">글쓰기</a>
+    </div>
+
+    {% if posts %}
+      {% for post in posts %}
+        <div class="topic-card">
+          <span>#{{ post.id }}</span>
+          <h3>
+            <a href="{{ url_for('post_detail', post_id=post.id) }}">
+              {{ post.title }}
+            </a>
+          </h3>
+          <p>
+            작성자: {{ post.writer }} |
+            작성일: {{ post.created_at }} |
+            조회수: {{ post.views }}
+          </p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center;">아직 작성된 게시글이 없습니다.</p>
+    {% endif %}
+  </section>
+</main>
+
+<footer class="footer">
+  <p>© 2026 SUDO Study. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
