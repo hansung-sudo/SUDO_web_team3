@@ -11,19 +11,28 @@
   <nav class="navbar">
     <div class="brand-area">
       <a href="/" class="logo-area">
-        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" class="nav-logo" alt="SUDO Logo">
+        <img src="{{ url_for('static', filename='assets/sudo-logo.png') }}" alt="SUDO Logo" class="nav-logo" />
         <span>SUDO</span>
       </a>
 
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
     </div>
 
-    <ul class="nav-menu">
-      <li><a href="/">홈</a></li>
-      <li><a href="/intro">소개</a></li>
-      <li><a href="/board" class="active">게시판</a></li>
-      <li><a href="/apply">지원</a></li>
-    </ul>
+    <div class="dropdown" id="mainMenu">
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="dropdownMenu">
+        <span class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      <ul class="dropdown-menu" id="dropdownMenu">
+        <li><a href="/intro">소개</a></li>
+        <li><a href="/board">게시판</a></li>
+        <li><a href="/apply">지원</a></li>
+      </ul>
+    </div>
   </nav>
 </header>
 
@@ -110,6 +119,37 @@
   themeToggle.addEventListener("click", function () {
     setTheme(!root.classList.contains("dark-theme"));
   });
+
+  const toggle = document.getElementById("menuToggle");
+  const menu = document.getElementById("dropdownMenu");
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+
+      const isOpen = menu.classList.contains("open");
+
+      if (isOpen) {
+        menu.classList.remove("open");
+        toggle.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      } else {
+        menu.classList.add("open");
+        toggle.classList.add("open");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!menu.classList.contains("open")) return;
+
+      if (!e.target.closest("#mainMenu")) {
+        menu.classList.remove("open");
+        toggle.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
 </script>
 
 </body>
