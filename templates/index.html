@@ -167,10 +167,10 @@
         <!-- 히어로 섹션: 현재 메인 타이틀과 설명만 표시 -->
       </div>
 
-      <div class="hero-image">
-        <div class="hologram"></div>
-        <div id="sudoLogoRoot" class="logo-mount-root"></div>
-      </div>
+     <div class="hero-image">
+  <div class="hologram"></div>
+  <div id="sudoLogoRoot" class="logo-mount-root"></div>
+</div>
     </section>
 
     
@@ -256,5 +256,21 @@
       });
     })();
   </script>
+  <script src="https://unpkg.com/mithril/mithril.js"></script>
+<script type="module" src="/static/script.js"></script>
+
+<script>
+const root = document.getElementById('sudoLogoRoot');
+
+m.mount(root, {
+  view: function() {
+    return m("img", {
+      src: "/static/assets/sudo-logo.png",
+      alt: "SUDO Logo",
+      id: "sudoLogo"
+    })
+  }
+});
+</script>
 </body>
 </html>
